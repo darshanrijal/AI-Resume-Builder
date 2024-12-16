@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, mapToResumeValues } from "@/lib/utils";
 import { ResumeValues } from "@/lib/validation";
 import { useUnloadWarning } from "@/hooks/use-unload-warning";
 import { Breadcrumbs } from "./breadcrumbs";
@@ -10,9 +10,16 @@ import { ResumePreviewSection } from "./ResumePreviewSection";
 import { Footer } from "./footer";
 import { steps } from "./steps";
 import { useAutoSaveResume } from "./useAutoSaveResume";
+import { ResumeServerData } from "@/lib/types";
 
-export const ResumeEditor = () => {
-  const [resumeData, setResumeData] = useState<ResumeValues>({});
+interface ResumeEditorProps {
+  resumeToEdit: ResumeServerData | null;
+}
+
+export const ResumeEditor = ({ resumeToEdit }: ResumeEditorProps) => {
+  const [resumeData, setResumeData] = useState<ResumeValues>(
+    resumeToEdit ? mapToResumeValues(resumeToEdit) : {},
+  );
   const [showSmResumePreview, setshowSmResumePreview] = useState(false);
   const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);
   useUnloadWarning(hasUnsavedChanges);
