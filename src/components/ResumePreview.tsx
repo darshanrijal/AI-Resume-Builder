@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { formatDate } from "date-fns";
 import { useDimensions } from "@/hooks/use-dimensions";
@@ -10,11 +10,13 @@ import { BorderStyle } from "@/app/(main)/editor/BorderStyleButton";
 interface ResumePreviewProps {
   resumeData: ResumeValues;
   className?: string;
+  contentRef?: React.Ref<HTMLDivElement>;
 }
 
 export const ResumePreview = ({
   resumeData,
   className,
+  contentRef,
 }: ResumePreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
@@ -28,7 +30,9 @@ export const ResumePreview = ({
       ref={containerRef}
     >
       <div
-        className={cn("space-y-6 p-6", !width && "invisible")}
+        ref={contentRef}
+        id="resumePreviewContent"
+        className={cn("space-y-6 p-6 print:p-0", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
         }}
