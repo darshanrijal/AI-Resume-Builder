@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { EditorFormProps } from "@/lib/types";
 import { workExperienceSchema, WorkExperienceValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import { GenerateWorkExperienceButton } from "./GenerateWorkExperienceButton";
 
 export const WorkExperienceForm = ({
   resumeData,
@@ -178,6 +179,13 @@ function WorkExperienceItem({
           )}
           {...attributes}
           {...listeners}
+        />
+      </div>
+      <div className="flex justify-center">
+        <GenerateWorkExperienceButton
+          onWorkExperienceGenerated={(exp) =>
+            form.setValue(`workExperiences.${index}`, exp)
+          }
         />
       </div>
       <FormField
