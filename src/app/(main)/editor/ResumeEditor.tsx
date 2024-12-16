@@ -2,16 +2,20 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Breadcrumbs } from "./breadcrumbs";
-import { steps } from "./steps";
-import { Footer } from "./footer";
-import { ResumeValues } from "@/lib/validation";
-import { ResumePreviewSection } from "./ResumePreviewSection";
 import { cn } from "@/lib/utils";
+import { ResumeValues } from "@/lib/validation";
+import { useUnloadWarning } from "@/hooks/use-unload-warning";
+import { Breadcrumbs } from "./breadcrumbs";
+import { ResumePreviewSection } from "./ResumePreviewSection";
+import { Footer } from "./footer";
+import { steps } from "./steps";
+import { useAutoSaveResume } from "./useAutoSaveResume";
 
 export const ResumeEditor = () => {
   const [resumeData, setResumeData] = useState<ResumeValues>({});
   const [showSmResumePreview, setshowSmResumePreview] = useState(false);
+  const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);
+  useUnloadWarning(hasUnsavedChanges);
   const searchParams = useSearchParams();
   const currentStep = searchParams.get("step") || steps[0].key;
 
@@ -59,6 +63,7 @@ export const ResumeEditor = () => {
         </div>
       </main>
       <Footer
+        isSaving={isSaving}
         currentStep={currentStep}
         setCurrentStep={setStep}
         showSmResumePreview={showSmResumePreview}
