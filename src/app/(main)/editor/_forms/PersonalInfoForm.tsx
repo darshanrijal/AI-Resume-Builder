@@ -52,6 +52,7 @@ export const PersonalInfoForm = ({
           <FormField
             control={form.control}
             name="photo"
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             render={({ field: { value, ...fieldValues } }) => (
               <FormItem>
                 <FormLabel>Your photo</FormLabel>

@@ -33,8 +33,6 @@ export default async function Page() {
     getUserSubscriptionLevel(userId),
   ]);
 
-  // TODO check quota for non premium users
-
   return (
     <main className="mx-auto w-full max-w-7xl space-y-6 px-3 py-6">
       <CreateResumeButton
