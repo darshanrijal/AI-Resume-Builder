@@ -1,8 +1,9 @@
 "use server";
-import { del, put } from "@vercel/blob";
-import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { resumeSchema, ResumeValues } from "@/lib/validation";
+import { auth } from "@clerk/nextjs/server";
+import { del, put } from "@vercel/blob";
+import { notFound, unauthorized } from "next/navigation";
 import path from "path";
 
 export async function saveResume(values: ResumeValues) {
@@ -14,7 +15,7 @@ export async function saveResume(values: ResumeValues) {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("User not authenticated");
+    unauthorized();
   }
 
   //   TODO check resume count for non premium users
@@ -24,7 +25,7 @@ export async function saveResume(values: ResumeValues) {
     : null;
 
   if (id && !existingResume) {
-    throw new Error("Resume not found");
+    notFound();
   }
 
   let newPhotoUrl: string | null | undefined = undefined;
