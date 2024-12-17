@@ -8,6 +8,7 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z.string().startsWith("vercel_blob_rw_"),
     GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
     STRIPE_SECRET_KEY: z.string().startsWith("sk_"),
+    STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
   },
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().startsWith("pk_"),
