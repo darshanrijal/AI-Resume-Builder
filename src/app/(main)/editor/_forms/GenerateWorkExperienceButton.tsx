@@ -80,7 +80,6 @@ function InputDialog({
   async function onSubmit(input: GenerateWorkExperienceInput) {
     try {
       const res = await generateWorkExperience(input);
-      console.log("AI Response", res);
 
       onWorkExperienceGenerated(res);
     } catch (error) {
