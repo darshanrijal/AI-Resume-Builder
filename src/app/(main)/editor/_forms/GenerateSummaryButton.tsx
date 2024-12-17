@@ -4,6 +4,9 @@ import { useToast } from "@/hooks/use-toast";
 import { ResumeValues } from "@/lib/validation";
 import { LoadingButton } from "@/components/LoadingButton";
 import { generateSummary } from "./actions";
+import { usePremiumModal } from "@/hooks/use-premium-modal";
+import { useSubscriptionLevel } from "../../SubscriptionLevelCtx";
+import { canUseAITools } from "@/lib/permissions";
 
 interface GenerateSummaryButtonProps {
   resumeData: ResumeValues;
@@ -16,10 +19,14 @@ export const GenerateSummaryButton = ({
 }: GenerateSummaryButtonProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const subscriptionLevel = useSubscriptionLevel();
+  const premiumModal = usePremiumModal();
 
   async function handleClick() {
-    // TODO block for non premium users
-
+    if (!canUseAITools(subscriptionLevel)) {
+      premiumModal.setOpen(true);
+      return;
+    }
     try {
       setLoading(true);
       const aiResponse = await generateSummary(resumeData);

@@ -1,5 +1,7 @@
 "use server";
 
+import { canUseAITools } from "@/lib/permissions";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 import {
   GenerateSummaryInput,
   generateSummarySchema,
@@ -8,10 +10,21 @@ import {
   WorkExperience,
 } from "@/lib/validation";
 import { google } from "@ai-sdk/google";
+import { auth } from "@clerk/nextjs/server";
 import { generateText } from "ai";
+import { unauthorized } from "next/navigation";
 
 export async function generateSummary(input: GenerateSummaryInput) {
-  // TODO block for non premium users
+  const { userId } = await auth();
+  if (!userId) {
+    unauthorized();
+  }
+
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("Only pro plus users can use this feature");
+  }
 
   const { educations, jobTitle, skills, workExperiences } =
     generateSummarySchema.parse(input);
@@ -71,7 +84,16 @@ export async function generateSummary(input: GenerateSummaryInput) {
 export async function generateWorkExperience(
   input: GenerateWorkExperienceInput,
 ) {
-  // TODO block for non premium users
+  const { userId } = await auth();
+  if (!userId) {
+    unauthorized();
+  }
+
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("Only pro plus users can use this feature");
+  }
 
   const { description } = generateWorkExperienceSchema.parse(input);
   const systemMessage = `

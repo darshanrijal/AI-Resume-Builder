@@ -7,6 +7,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSubscriptionLevel } from "../SubscriptionLevelCtx";
+import { usePremiumModal } from "@/hooks/use-premium-modal";
+import { canUseCustomization } from "@/lib/permissions";
 
 interface ColorPickerProps {
   color: Color | undefined;
@@ -15,6 +18,8 @@ interface ColorPickerProps {
 
 export const ColorPicker = ({ color, onColorChange }: ColorPickerProps) => {
   const [showPopover, setShowPopover] = useState(false);
+  const subscriptionLevel = useSubscriptionLevel();
+  const premiumModal = usePremiumModal();
 
   return (
     <Popover open={showPopover} onOpenChange={setShowPopover}>
@@ -23,7 +28,13 @@ export const ColorPicker = ({ color, onColorChange }: ColorPickerProps) => {
           size="icon"
           variant="outline"
           title="Change color"
-          onClick={() => setShowPopover(true)}
+          onClick={() => {
+            if (!canUseCustomization(subscriptionLevel)) {
+              premiumModal.setOpen(true);
+              return;
+            }
+            setShowPopover(true);
+          }}
         >
           <Palette className="size-5" />
         </Button>
