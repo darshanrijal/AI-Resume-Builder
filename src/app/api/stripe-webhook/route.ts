@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
     const payload = await req.text();
     const signature = req.headers.get("stripe-signature");
 
-    console.log("Payload", payload, "Signature", signature);
-
     if (!signature) {
       return new Response("signature is missing", { status: 400 });
     }
@@ -21,8 +19,6 @@ export async function POST(req: NextRequest) {
       signature,
       env.STRIPE_WEBHOOK_SECRET,
     );
-
-    console.log(`Recieved event: ${event.type}`, event.data.object);
 
     switch (event.type) {
       case "checkout.session.completed":
@@ -42,7 +38,6 @@ export async function POST(req: NextRequest) {
         break;
 
       default:
-        console.log("Unhandled event type", event.type);
     }
     return new Response("Event recieved", { status: 200 });
   } catch (error) {
@@ -57,8 +52,6 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   if (!userId) {
     throw new Error("User ID is missing in session metadata");
   }
-
-  console.log("UserID handleSessionCompleted", userId);
 
   (await clerkClient()).users.updateUserMetadata(userId, {
     privateMetadata: {
