@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { createCheckoutSession } from "./actions";
+import { env } from "@/env";
 
 const premiumFeatures: Array<string> = ["AI Tools", "Up to 3 resumes"];
 const premiumPlusFeatures: Array<string> = [
@@ -62,9 +63,7 @@ export const PremiumModal = () => {
               </ul>
               <Button
                 onClick={() =>
-                  handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHY!,
-                  )
+                  handlePremiumClick(env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHY)
                 }
                 disabled={loading}
               >
@@ -88,7 +87,7 @@ export const PremiumModal = () => {
                 variant="premium"
                 onClick={() =>
                   handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHY!,
+                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHY,
                   )
                 }
                 disabled={loading}
